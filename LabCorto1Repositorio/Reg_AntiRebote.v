@@ -21,7 +21,7 @@
 module Reg_AntiRebote(
 	input wire clk, reset,
 	input wire sw,            //Switch
-	output reg db_level, Control_tick
+	output reg Dato_Sincronizado, Dato_listo 
     );
 	 
 //declaracion del estado simbolico
@@ -61,21 +61,21 @@ begin
 	begin
 		state_reg <= zero;
 		q_reg <= 0;
-		Control_tick <= 0;
+		Dato_listo  <= 0;
 	end
 	else
 	begin
 		state_reg <= state_next;
 		q_reg <= q_next;
-		Control_tick <= Control_next_tick;
+		Dato_listo  <= Dato_listo_Siguiente;
 	end
 end
 
 always @*
 begin
 	state_next = state_reg;
-	db_level = 1'b0;
-	Control_next_tick = 1'b0;
+	Dato_Sincronizado = 1'b0;
+	Dato_listo_Siguiente = 1'b0;
 //begin case
 	case (state_reg)
 	
@@ -94,12 +94,12 @@ begin
 		else
 			if (m_tick)
 				state_next = one;
-				Control_next_tick = 1'b1;	
+				Dato_listo_Siguiente = 1'b1;	
 	end
         
 	one:
 	begin
-		db_level = 1'b1;
+		Dato_Sincronizado = 1'b1;
 		if (~sw)
 		begin
 			state_next = wait0;
@@ -113,7 +113,7 @@ begin
 		else
 			if (m_tick)
 				state_next = zero;
-				Control_next_tick = 1'b1;
+				Dato_listo_Siguiente = 1'b1;
 	end   
 	endcase
 end
