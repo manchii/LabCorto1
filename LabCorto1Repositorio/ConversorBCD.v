@@ -20,15 +20,17 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module ConversorBCD(
-		input [4:0] Temperatura,
-		output reg [3:0] Decenas,
+		//Señal de temperatura digital
+		input [4:0] Temperatura_sincronizada,
+		//Señal de temperatura BCD
+		output reg [3:0] Decenas, 
 		output reg [3:0] Unidades
     );
-	//wire [3:0] decenas,unidades;
 	
-	always @* //(posedge clk)
+	//Comportamiento del decodificador a BCD
+	always @*
 	begin
-		case(Temperatura)
+		case(Temperatura_sincronizada)
 			5'd0: begin Decenas <= 4'h2; Unidades <= 4'h0; end
 			5'd1: begin Decenas <= 4'h2; Unidades <= 4'h1; end
 			5'd2: begin Decenas <= 4'h2; Unidades <= 4'h2; end
@@ -63,48 +65,4 @@ module ConversorBCD(
 			5'd31: begin Decenas <= 4'h5; Unidades <= 4'h1; end	
 		endcase
 	end
-
-
-	 
 endmodule
-
-
-
-
-
-
-
-
-
-/*
-module ConversorBCD(
-		input [4:0] Temperatura,
-//		input clk,rst,
-		output reg [3:0] Decenas,
-		output reg [3:0] Unidades
-    );
-integer i;
-
-always @(Temperatura)
-begin
-	Decenas = 4'd0;
-	Unidades = 4'd0;
-	
-	for(i=4; i>=0; i=i-1)
-	begin
-		if(Decenas>=5)
-			Decenas = Decenas + 3;
-		if(Unidades>=5)
-			Unidades=Unidades + 3;
-		
-		Decenas = Decenas << 1;
-		Decenas[0] = Unidades[3];
-		Unidades = Unidades << 1;
-		Unidades[0] = Temperatura[i];
-	end
-end
-
-
-endmodule
-
-*/
