@@ -28,7 +28,13 @@ module Sistema_Completo(
 	output wire [7:0] Catodo,
 	output wire [3:0] Seleccion
     );
-    
+
+//Declaracion simbolica de los estados de la maquina
+localparam [1:0]
+	leer = 2'b01,
+	decidir = 2'b10, 
+	alerta = 2'b11;
+
 //Inicio de declaracion de variables
 //Variables de lectura de datos
 wire [4:0] Temperatura_Sincronizada;
@@ -44,10 +50,21 @@ wire Activar_Decidir;
 wire Peligro;
 
 //Variables del display
-wire [6:0] Unidades, Decenas, Actividad, Estado;
+wire [6:0] Unidades, Decenas, Actividad; 
+reg Estado;
 wire [3:0] Unidades_BCD, Decenas_BCD;
 wire [1:0] Estado_maquina;
 wire clk_disp;
+
+always@*
+begin
+	case(Estado_maquina)
+		leer: Estado = 7'b1001111;
+		decidir: Estado = 7'b0010010;
+		alerta: Estado = 7'b0000110;
+		default: Estado = 7'hff;
+	endcase
+end
 
 //Inicio de descripcion
 assign Dato_listo = Dato_listo_Temp0 | Dato_listo_Temp1 | Dato_listo_Temp2 | Dato_listo_Temp3 | Dato_listo_Temp4 |
