@@ -19,20 +19,20 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module Driver_7seg(
-	input wire clk_disp,rst,
-	input wire Disp_Enable,
+	input wire clk_disp,rst, //Clock y reset
+	//Entradas para mostrar en los 4 displays
 	input wire [6:0] Unidades,
-	input wire [6:0] Decenas,
+	input wire [6:0] Decenas, 
 	input wire [6:0] Estado,
 	input wire [6:0] Actividad,
+	//Salidas para activar los displays
 	output reg [6:0] Catodo,
 	output reg [3:0] Seleccion
 );
 
 reg [2:0] estado_actual, estado_siguiente;
 
-//Estados simbolicos
-
+//Declaracion simbolica de los estados de la maquina de estados del driver
 localparam [2:0] 
 	idle = 3'b000,
 	unidades = 3'b001,
@@ -40,7 +40,7 @@ localparam [2:0]
 	actividad = 3'b011,
 	estado = 3'b100;
 
-
+//Comportamiento ante los cambios de clock y reset de la maquina de estados
 always@(posedge clk_disp, posedge rst)
 begin
 	if(rst)
@@ -49,129 +49,47 @@ begin
 		estado_actual <= estado_siguiente;
 end
 
+//Comportamiento de la maquina de estado
 always@*
 begin
-	estado_siguiente = idle;
-	Catodo = 7'b1111111; 
-	Seleccion = 4'h0;
+	Catodo = 7'b1111111; 	//Se muestra en un reset
+	Seleccion = 4'h0;	//Se muestra en un reset
 	case(estado_actual)
 		idle:
+		//Estado ante el Reset
 		begin
-			if(Disp_Enable)
-				estado_siguiente = unidades;
+			estado_siguiente = unidades;
 		end
 		unidades:
+		//Se enciende el display de Unidades
 		begin
-			if(Disp_Enable)
-			begin
-				estado_siguiente = decenas;
-				Catodo = Unidades;
-				Seleccion = 4'b0001;
-			end
-			else
-				estado_siguiente = idle;
+			estado_siguiente = decenas;
+			Catodo = Unidades;
+			Seleccion = 4'b0001;
 		end
 		decenas:
+		//Se enciende el display de Decenas
 		begin
-			if(Disp_Enable)
-			begin
-				estado_siguiente = actividad;
-				Catodo = Decenas;
-				Seleccion = Seleccion << 1;
-			end
-			else
-				estado_siguiente = idle;
+			estado_siguiente = actividad;
+			Catodo = Decenas;
+			Seleccion = Seleccion << 1;
 		end
 		actividad:
+		//Se enciende el display de actividad, muestra una "V" o "A"
 		begin
-			if(Disp_Enable)
-			begin
-				estado_siguiente = estado;
-				Catodo = Actividad;
-				Seleccion = Seleccion << 1;
-			end
-			else
-				estado_siguiente = idle;
+			estado_siguiente = estado;
+			Catodo = Actividad;
+			Seleccion = Seleccion << 1;
 		end
 		estado:
+		//Se enciende el display del # de estado
 		begin
-			if(Disp_Enable)
-			begin
-				estado_siguiente = unidades;
-				Catodo = Estado;
-				Seleccion = Seleccion << 1;
-			end
-			else
-				estado_siguiente = idle;
+			estado_siguiente = unidades; //Vuelve a Unidades
+			Catodo = Estado;
+			Seleccion = Seleccion << 1;
 		end
 		default:
 			estado_siguiente = idle;
 	endcase
 end
-
-
-
 endmodule
-
-
-
-
-
-/*
-module Driver_7seg(
-		input wire clk_disp, rst,
-		input wire Disp_Enable,
-		input wire [7:0] Unidades,
-		input wire [7:0] Decenas,
-		input wire [7:0] Estado,
-		output reg [7:0] Anodo,
-		output wire [3:0] Seleccion,
-		output wire Catodo
-    );
-
-reg [3:0]i_actual, i_siguiente;
-reg [7:0] anodo;
-
-always@(posedge clk_disp, posedge rst)
-begin	
-//	i_actual <= 	Disp_Enable 	? i_siguiente :
-//			rst		? 4'b0001 : 4'b0000;	
-//	Anodo <= rst ? 8'h00 : anodo;
-	if(rst)
-	begin
-		i_actual<=4'b0001;
-		Anodo <= 8'h00;
-	end
-	else
-	begin
-		i_actual <= Disp_Enable ? i_siguiente : 4'h0;
-		Anodo <= anodo;
-	end
-end
-
-always@*
-begin
-	anodo = 8'h00;
-	i_siguiente= 4'b0000;
-	case(i_actual)
-		4'b0001:
-		begin
-			anodo = Unidades;
-			i_siguiente = 4'b0010;
-		end		
-		4'b0010:
-		begin		
-			anodo = Decenas;
-			i_siguiente = 4'b1000;
-		end		
-		4'b1000:
-			anodo = Estado;
-		default: i_siguiente = 4'b0001;
-	endcase
-end
-
-assign Seleccion=i_actual;
-
-
-endmodule
-*/
