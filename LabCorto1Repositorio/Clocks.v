@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
+// Company: Tecnológico de Costa Rica
+// Engineer: Kaled Alfaro e Irene Rivera
 // 
 // Create Date:    23:18:58 02/26/2015 
 // Design Name: 
