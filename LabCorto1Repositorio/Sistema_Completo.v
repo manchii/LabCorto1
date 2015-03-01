@@ -28,131 +28,150 @@ module Sistema_Completo(
 	output wire [7:0] Catodo,
 	output wire [3:0] Seleccion
     );
+    
+//Inicio de declaracion de variables
+//Variables de lectura de datos
+wire [4:0] Temperatura_Sincronizada;
+wire Presencia_Sincronizada;
+wire Ignicion_Sincronizada;
+wire 	Dato_listo_Temp0,Dato_listo_Temp1,Dato_listo_Temp2,Dato_listo_Temp3,Dato_listo_Temp4,
+	Dato_listo_Presencia,Dato_listo_Ignicion;
+wire Dato_listo;
 
-wire [4:0] Temperatura_Registro;
-wire Presencia_Registro;
-wire Ignicion_Registro;
+//Banderas
 wire [1:0] Alerta;
-wire Unidades, Decenas, Estado;
+wire Activar_Decidir;
+wire Peligro;
+
+//Variables del display
+wire [6:0] Unidades, Decenas, Actividad, Estado;
+wire [3:0] Unidades_BCD, Decenas_BCD;
+wire [1:0] Estado_maquina;
+wire clk_disp;
+
+//Inicio de descripcion
+assign Dato_listo = Dato_listo_Temp0 | Dato_listo_Temp1 | Dato_listo_Temp2 | Dato_listo_Temp3 | Dato_listo_Temp4 |
+	Dato_listo_Presencia | Dato_listo_Ignicion;
 
 Reg_AntiRebote ModuloRegistroTemp0(
-	.clk(),//1bit
-	.rst(),//1bit
-	.Switch(),//1bit
-	.Dato_Sincronizado(),//1bit
-	.Dato_listo()//1bit
+	.clk(clk),//1bit
+	.rst(rst),//1bit
+	.Switch(Temperatura[0]),//1bit
+	.Dato_Sincronizado(Temperatura_Sincronizada[0]),//1bit
+	.Dato_listo(Dato_listo_Temp0)//1bit
 );
 
 Reg_AntiRebote ModuloRegistroTemp1(
-	.clk(),//1bit
-	.rst(),//1bit
-	.Switch(),//1bit
-	.Dato_Sincronizado(),//1bit
-	.Dato_listo()//1bit
+	.clk(clk),//1bit
+	.rst(rst),//1bit
+	.Switch(Temperatura[1]),//1bit
+	.Dato_Sincronizado(Temperatura_Sincronizada[1]),//1bit
+	.Dato_listo(Dato_listo_Temp1)//1bit
 );
 
 Reg_AntiRebote ModuloRegistroTemp2(
-	.clk(),//1bit
-	.rst(),//1bit
-	.Switch(),//1bit
-	.Dato_Sincronizado(),//1bit
-	.Dato_listo()//1bit
+	.clk(clk),//1bit
+	.rst(rst),//1bit
+	.Switch(Temperatura[2]),//1bit
+	.Dato_Sincronizado(Temperatura_Sincronizada[2]),//1bit
+	.Dato_listo(Dato_listo_Temp2)//1bit
 );
 
 Reg_AntiRebote ModuloRegistroTemp3(
-	.clk(),//1bit
-	.rst(),//1bit
-	.Switch(),//1bit
-	.Dato_Sincronizado(),//1bit
-	.Dato_listo()//1bit
+	.clk(clk),//1bit
+	.rst(rst),//1bit
+	.Switch(Temperatura[3]),//1bit
+	.Dato_Sincronizado(Temperatura_Sincronizada[3]),//1bit
+	.Dato_listo(Dato_listo_Temp3)//1bit
 );
 
 Reg_AntiRebote ModuloRegistroTemp4(
-	.clk(),//1bit
-	.rst(),//1bit
-	.Switch(),//1bit
-	.Dato_Sincronizado(),//1bit
-	.Dato_listo()//1bit
+	.clk(clk),//1bit
+	.rst(rst),//1bit
+	.Switch(Temperatura[4]),//1bit
+	.Dato_Sincronizado(Temperatura_Sincronizada[5]),//1bit
+	.Dato_listo(Dato_listo_Temp4)//1bit
 );
 
 Reg_AntiRebote ModuloRegistroPresencia(
-	.clk(),//1bit
-	.rst(),//1bit
-	.Switch(),//1bit
-	.Dato_Sincronizado(),//1bit
-	.Dato_listo()//1bit
+	.clk(clk),//1bit
+	.rst(rst),//1bit
+	.Switch(Presencia),//1bit
+	.Dato_Sincronizado(Presencia_Sincronizada),//1bit
+	.Dato_listo(Dato_listo_Presencia)//1bit
 );
 
 Reg_AntiRebote ModuloRegistroIgnicion(
-	.clk(),//1bit
-	.rst(),//1bit
-	.Switch(),//1bit
-	.Dato_Sincronizado(),//1bit
-	.Dato_listo()//1bit
+	.clk(clk),//1bit
+	.rst(rst),//1bit
+	.Switch(Ignicion),//1bit
+	.Dato_Sincronizado(Ignicion_Sincronizada),//1bit
+	.Dato_listo(Dato_listo_Ignicion)//1bit
 );
 
 LogicaDeActivacion ModulodeActivacion(
-	.Alerta(),//2bits
-	.rst(),//2bits
-	.clk(),//1bit
-	.Presencia(),//1bit
-	.Ignicion(),//1bit
-	.Activar_Decidir()//1bit,
-	.Alarma(),//1bit
-	.Ventilacion(),//1bit
-	.Peligro()//1bit
+	.Alerta(Alerta),//2bits
+	.rst(rst),//2bits
+	.clk(clk),//1bit
+	.Presencia(Presencia_Sincronizada),//1bit
+	.Ignicion(Ignicion_Sincronizada),//1bit
+	.Activar_Decidir(Activar_Decidir)//1bit,
+	.Alarma(Alarma),//1bit
+	.Ventilacion(Ventilacion),//1bit
+	.Peligro(Peligro)//1bit
 );
 
 Flag_Danger ModuloAvisodePeligro(
-	.Temperatura(), //5bits
-	.Alerta() //2bits
+	.Temperatura(Temperatura_Sincronizada), //5bits
+	.Alerta(Alerta) //2bits
 );
 
 Driver_7seg ModuloControlador7seg(
-	.clk_disp(),//1bit
-	.rst(), //1bit
-	.Unidades(), //7bits
-	.Decenas(), //7bits
-	.Estado(), //7bits
-	.Actividad(), //7bits
-	.Catodo(), //7bits
-	.Seleccion() //4bits
+	.clk_disp(clk_disp),//1bit
+	.rst(rst), //1bit
+	.Unidades(Unidades), //7bits
+	.Decenas(Decenas), //7bits
+	.Estado(Estado), //7bits
+	.Actividad(Actividad), //7bits
+	.Catodo(Catodo), //7bits
+	.Seleccion(Seleccion) //4bits
 );
 
 Deco7seg ModuloDeco7seg_Unidades(
-	.hex(), //4bits
-	.sseg(), //7bits
+	.hex(Unidades_BCD), //4bits
+	.sseg(Unidades), //7bits
 );
 
 Deco7seg ModuloDeco7seg_Decenas(
-	.hex(), //4bits
-	.sseg(), //7bits
+	.hex(Decenas_BCD), //4bits
+	.sseg(Decenas), //7bits
 );
 
 ConversorBCD ModuloConversorBCD (
-	.Temperatura_sincronizada(), //5bits
-	.Decenas(), //4bits
-	.Unidades() //4bits
+	.Temperatura_sincronizada(Temperatura_Sincronizada), //5bits
+	.Decenas(Decenas_BCD), //4bits
+	.Unidades(Unidades_BCD) //4bits
 );
 
 Control ModuloControl (
-	.Dato_listo(),//1bit
-	.Peligro(),//1bit
-	.rst(),//1bit
-	.Activar_Decidir(),//1bit
-	Estados() //2bits
+	.Dato_listo(Dato_listo),//1bit
+	.Peligro(Peligro),//1bit
+	.rst(rst),//1bit
+	.clk(clk),
+	.Activar_Decidir(Activar_Decidir),//1bit
+	Estados(Estado_maquina) //2bits
 );
 
 Clocks ModuloClock_display (
-	.clk(),	//1bit
-	.rst(),	//1bit
-	.clk_display() //1bit
+	.clk(clk),	//1bit
+	.rst(rst),	//1bit
+	.clk_display(clk_disp) //1bit
 );
 
 Activacion_7seg ModuloActivacion_7seg (
-	.Ventilacion(), //1bit
-	.Alarma(),	//1bit
-	.Activacion()	//7bits
+	.Ventilacion(Ventilacion), //1bit
+	.Alarma(Alarma),	//1bit
+	.Activacion(Actividad)	//7bits
 );
 
 
