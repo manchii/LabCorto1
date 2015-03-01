@@ -10,6 +10,8 @@
 // Target Devices: 
 // Tool versions: 
 // Description: 
+//		Módulo encargado de la activación y funcionamiento del reloj o clock básico
+//		encargado del funcionamiento de los módulos
 //
 // Dependencies: 
 //
