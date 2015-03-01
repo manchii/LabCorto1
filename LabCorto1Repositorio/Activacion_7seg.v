@@ -12,6 +12,8 @@
 // Description: 
 //
 // Dependencies: 
+//      	Módulo encargado de activar el display de 7 segmentos y mostrar el mensaje designado
+//		para alarma y ventilación.
 //
 // Revision: 
 // Revision 0.01 - File Created
