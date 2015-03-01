@@ -10,9 +10,7 @@
 // Target Devices: 
 // Tool versions: 
 // Description: 
-/* do
-   
-*/
+
 // Dependencies: 
 //
 // Revision: 
@@ -22,11 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module Control(
-	input wire Temp_En,
-	input wire Danger,
+	input wire Dato_listo,
+	input wire Peligro,
 	input wire rst,clk,
-	output reg Enable_Sensar,
-	output reg Enable_Activacion,
+	output reg Activar_Decidir,
 	output wire [1:0] Estados
 );
 
@@ -48,25 +45,25 @@ always@(posedge clk,posedge rst)
 always@*
 begin
 	estado_siguiente=estado_actual;
-	Enable_Sensar=1'b0;
-	Enable_Activacion=1'b0;
+	Activar_Decidir=1'b0;
 	case(estado_actual)
 		leer:
 		begin
-			Enable_Sensar=1'b1;
-			if(Temp_En)
+			if(Dato_listo)
 				estado_siguiente=decidir;
 				
 		end
 		decidir:
 		begin
-			Enable_Activacion=1'b1;
-			if(Danger)
+			Activar_Decidir=1'b1;
+			if(Peligro)
 				estado_siguiente=alerta;
+			else
+				estado_siguiente=leer;
 		end
 		alerta:
 		begin
-			if(rst)
+			if(Dato_listo)
 				estado_siguiente=leer;
 		end		
 		default: estado_siguiente=leer;
