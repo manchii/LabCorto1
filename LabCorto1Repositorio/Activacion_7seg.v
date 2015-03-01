@@ -33,7 +33,7 @@ localparam [6:0]
 	V = 7'b0001000;
 
 //Se muestra el ventilacion, sino la alarma, sino nada.
-assign	Activacion = (Ventilacion	? V :
+assign	Activacion = Ventilacion	? V :
 			(Alarma)	? A : 7'hff;
 
 endmodule
