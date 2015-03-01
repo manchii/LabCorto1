@@ -20,10 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module Deco7Seg(
+	//Numero binario a mostrar
 	input wire [3:0] hex,
+	//Numero procesado para mostrar en display de 7 segmentos
 	output reg [7:0] sseg
     );
-
+	//Comportamiento del decodificador
 	always @*
 	begin
 		case(hex)
@@ -40,6 +42,4 @@ module Deco7Seg(
 			default: sseg[6:0] = 7'bxxxxxxx;
 		endcase
 	end
-
-
 endmodule
