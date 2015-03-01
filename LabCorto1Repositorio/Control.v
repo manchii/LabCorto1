@@ -20,20 +20,23 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module Control(
-	input wire Dato_listo,
-	input wire Peligro,
-	input wire rst,clk,
-	output reg Activar_Decidir,
-	output wire [1:0] Estados
+	input wire Dato_listo, //Variable de salto condicional	
+	input wire Peligro,	//Variable de salto condicional
+	input wire rst,clk,	//Reset y Clock
+	output reg Activar_Decidir, //Habilitación para guardar cambios en los registros de salida.
+	output wire [1:0] Estados  // Salida para mostrar el estado del circuito a otro modulo
 );
 
+//Declaracion simbolica de los estados de la maquina
 localparam [1:0]
 	leer = 2'b01,
-	decidir = 2'b10,
+	decidir = 2'b10, 
 	alerta = 2'b11;
 
+//Registros de estado
 reg [1:0] estado_actual, estado_siguiente;
 
+//Comportamiento ante cada clock de la maquina
 always@(posedge clk,posedge rst)
 	
 	if(rst)
@@ -42,18 +45,21 @@ always@(posedge clk,posedge rst)
 		estado_actual <= estado_siguiente;
 
 
+//Comportamiento de los cambios y salidas de la maquina de estados finita
 always@*
 begin
-	estado_siguiente=estado_actual;
-	Activar_Decidir=1'b0;
+	estado_siguiente=estado_actual;	//no cambia de estado
+	Activar_Decidir=1'b0;		//no se registra un cambio para la salida
 	case(estado_actual)
-		leer:
+		leer:		//Si Aparece un dato se va al estado de decision
 		begin
-			if(Dato_listo)
+			if(Dato_listo) 
 				estado_siguiente=decidir;
-				
 		end
-		decidir:
+		
+		decidir:	
+		//Si habilita la decision y si no se encuentra peligro regresa a esperar otro dato.
+		//En caso de haber peligro se va al estado de alerta.
 		begin
 			Activar_Decidir=1'b1;
 			if(Peligro)
@@ -61,16 +67,18 @@ begin
 			else
 				estado_siguiente=leer;
 		end
+		
 		alerta:
+		//Se queda en estado de alerta hasta recibir otro dato para decidir.
 		begin
 			if(Dato_listo)
-				estado_siguiente=leer;
+				estado_siguiente=decidir;
 		end		
 		default: estado_siguiente=leer;
 	endcase
 	
 end
-
+//Asigancion de la salida de Estadas tomada de la maquina de estados.
 assign Estados = estado_actual;
 
 endmodule
