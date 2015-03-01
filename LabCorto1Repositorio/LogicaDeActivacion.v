@@ -70,6 +70,7 @@ begin
 		Ventilacion <= Apagado;
 	end		
 	else
+	begin
 		if(Activar_Decidir)
 		begin 
 			Alarma <= alarma_siguiente;
