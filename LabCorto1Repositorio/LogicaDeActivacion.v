@@ -32,18 +32,17 @@
 
 
 module LogicaDeActivacion(
-	input wire [1:0] Alerta, 						//Señal obtenida del Sistema_Alerta 
-	input wire rst,clk,
-	input wire Presencia,
-	input wire Ignicion,	//Señales auxiliares
-	input wire Enable,
-	input wire Enable_Activacion,
-	output reg Alarma,								//Activa la alarma
-	output reg Ventilacion,				//Activa el sistema de ventilación
-	output wire Danger    				//Señal de control
+	input wire [1:0] Alerta, //Señal obtenida de la generacion de bandera de alerta 
+	input wire rst,clk,	//Clock y reset
+	input wire Presencia,	//Presencia sincronizada
+	input wire Ignicion,	//Ignicion sincronizada
+	input wire Activar_Decidir,	//Permite el registro de los valores logicos de las salidas
+	output reg Alarma,		//Activa la alarma
+	output reg Ventilacion,		//Activa el sistema de ventilación
+	output wire Peligro    		//Señal de control
 );
-
-reg alarma_mem,ventilacion_mem;
+//Señales auxiliares para cambiar de estado
+wire alarma_siguiente,ventilacion_siguiente;
 
 //Declaración simbólica de las salidas de activación
 
@@ -52,42 +51,35 @@ localparam
 	Apagado = 1'b0;
 
 
+
+//Descripción del Proceso:
+assign alarma_siguiente  = 	Ignicion 	? Apagado : //Apagar en caso de haber ignición /
+				~Presencia 	? Apagado : //Apagar si no hay presencia /	
+				Alerta[1]	? Encendido : Apagado; //Encender si hay alerta debil /
+	
+assign ventilacion_siguiente = Ignicion	? Apagado : //Apagar en caso de haber ignición /
+				~Presencia	? Apagado : //Apagar si no hay presencia /
+				Alerta[0]	? Encendido : Apagado; //Encender si hay alerta fuerte /
+
+//Comportamiento
 always@(posedge clk, posedge rst)
 begin
-if(rst)
-begin
-	alarma_mem <= Apagado;
-	ventilacion_mem <= Apagado;
-	Alarma <= Apagado;
-	Ventilacion <= Apagado;
-end		
-else
-begin
-		//Descripción del Proceso
-if(Enable)
-	begin	
-	alarma_mem <= 		Ignicion 	? Apagado : 		//Apagar en caso de haber ignición
-				~Presencia 	? Apagado :		//Apagar si no hay presencia		
-				Alerta[1]	? Encendido : Apagado;	//Encender si hay alerta debil
-		
-	ventilacion_mem <= 		Ignicion	? Apagado :		//Apagar en caso de haber ignición
-				~Presencia	? Apagado :		//Apagar si no hay presencia
-				Alerta[0]	? Encendido : Apagado;	//Encender si hay alerta fuerte
+	if(rst)
+	begin
+		Alarma <= Apagado;
+		Ventilacion <= Apagado;
+	end		
+	else
+		if(Activar_Decidir)
+		begin 
+			Alarma <= alarma_siguiente;
+			Ventilacion <= ventilacion_siguiente;
+		end
 	end
-if(Enable_Activacion)
-	begin 
-		Alarma <= alarma_mem;
-		Ventilacion <= ventilacion_mem;
-	end
-
 end
 
-end
+//Asignación de las Aviso de Peligro
 
-//Asignación de las salidas
+assign Peligro = alarma_siguiente | ventilacion_siguiente; //Señal de Control
 
-assign Danger = alarma_mem | ventilacion_mem; //Señal de Control
-
-		
-		
 endmodule
