@@ -19,12 +19,13 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module Clocks(
-	input wire clk,rst,
-	output wire clk_display
+	input wire clk,rst,       //entradas para el reloj
+	output wire clk_display   //salida del reloj
     );
-reg [20:0]Contador, Cuenta_siguiente;
+reg [20:0]Contador, Cuenta_siguiente; 
 
-always@(posedge clk, posedge rst)
+//Comportamiento del reloj
+always@(posedge clk, posedge rst) //funciona cuando hay cambio a flanco positivo 
 begin
 	if(rst)
 		Contador <= 21'h0;
