@@ -19,17 +19,17 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module Reg_AntiRebote(
-	input wire clk, reset,
-	input wire sw,            //Switch
+	input wire clk, rst,
+	input wire Switch,            //Switch
 	output reg Dato_Sincronizado, Dato_listo 
     );
 	 
 //declaracion del estado simbolico
 localparam [1:0]
-	zero = 2'b00,
-	wait0 = 2'b01,
-	one = 2'b10,
-	wait1 = 2'b11;
+	Cero = 2'b00,
+	Espera_a_0 = 2'b01,
+	Uno = 2'b10,
+	Espera_a_1 = 2'b11;
 
 //numero de conteo de bits (2^N*20ns = 40ms)
 localparam N=21;
@@ -37,83 +37,75 @@ localparam N=21;
    
 //declaracion de señal
 
-	reg [1:0] state_reg, state_next;
-	reg [N-1:0] q_reg;
-	wire [N-1:0] q_next;
-	wire m_tick;
-	reg Control_next_tick;
-   
+	reg [1:0] estado_actual, estado_siguiente;
+	reg [N-1:0] Cuenta_actual;
+	wire [N-1:0] Cuenta_siguiente;
+	wire Fin_Cuenta;
+	reg Dato_listo_siguiente;
 
-always @ (posedge clk, posedge reset)
+assign Cuenta_siguiente = Cuenta_actual + 1'b1;
+assign Fin_Cuenta = (q_reg==0) ? 1'b1 : 1'b0;
+
+always @ (posedge clk, posedge rst)
 begin
-	if(reset)
-		q_reg <= 0;
-	else
-		q_reg <= q_next;
-end
-
-assign q_next = q_reg + 1'b1;
-assign m_tick = (q_reg==0) ? 1'b1 : 1'b0;
-
-always @ (posedge clk, posedge reset)
-begin
-	if (reset)
+	if (rst)
 	begin
-		state_reg <= zero;
-		q_reg <= 0;
+		estado_actual <= Cero;
 		Dato_listo  <= 0;
+		Cuenta_actual <= 0;
 	end
 	else
 	begin
-		state_reg <= state_next;
+		estado_actual <= estado_siguiente;
 		q_reg <= q_next;
-		Dato_listo  <= Dato_listo_Siguiente;
+		Dato_listo  <= Dato_listo_siguiente;
+		Cuenta_actual <= Cuenta_siguiente;
 	end
 end
 
 always @*
 begin
-	state_next = state_reg;
+	estado_siguiente = estado_actual;
 	Dato_Sincronizado = 1'b0;
-	Dato_listo_Siguiente = 1'b0;
+	Dato_listo_siguiente = 1'b0;
 //begin case
-	case (state_reg)
+	case (estado_actual)
 	
-	zero:
+	Cero:
 	begin
-		if (sw)
+		if (Switch)
 		begin
-			state_next = wait1;
+			estado_siguiente = Espera_a_1;
 		end
 	end
         
-	wait1:
+	Espera_a_1:
 	begin
-		if (~sw)
-			state_next = zero;
+		if (~Switch)
+			estado_siguiente = Cero;
 		else
-			if (m_tick)
-				state_next = one;
-				Dato_listo_Siguiente = 1'b1;	
+			if (Fin_Cuenta)
+				estado_siguiente = Uno;
+				Dato_listo_siguiente = 1'b1;	
 	end
         
-	one:
+	Uno:
 	begin
 		Dato_Sincronizado = 1'b1;
-		if (~sw)
+		if (~Switch)
 		begin
-			state_next = wait0;
+			estado_siguiente = Espera_a_0;
 		end
 	end
 
-	wait0:
+	Espera_a_0:
 	begin
-		if (sw)
-			state_next = one;
+		if (Switch)
+			estado_siguiente = Uno;
 		else
-			if (m_tick)
-				state_next = zero;
-				Dato_listo_Siguiente = 1'b1;
+			if (Fin_Cuenta)
+				estado_siguiente = Cero;
+				Dato_listo_siguiente = 1'b1;
 	end   
 	endcase
 end
