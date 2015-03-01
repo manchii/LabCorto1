@@ -10,6 +10,9 @@
 // Target Devices: 
 // Tool versions: 
 // Description: 
+//		Éste módulo consiste en ser el encargado de eliminar los errores producidos por el rebote de las placas metálica
+//		que componen los switches. Estos rebotes crean pequeños cambios de voltaje que el módulo de leer el cambio, los i
+//		interpreta como cambios reales y voluntarios, causando resultados indeseados.
 //
 // Dependencies: 
 //
