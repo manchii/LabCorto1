@@ -10,7 +10,9 @@
 // Target Devices: 
 // Tool versions: 
 // Description: 
-
+//		Módulo de la máquina de estados encargada de leer los datos de temperatura y definir 
+//		si el infante se encuentra en peligro
+//
 // Dependencies: 
 //
 // Revision: 
