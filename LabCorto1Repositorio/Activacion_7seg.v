@@ -19,15 +19,19 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module Activacion_7seg(
+	//Señales del sistema de salida
 	input wire Ventilacion,
 	input wire Alarma,
-	output wire [6:0] Anodo
+	//Señal para mostrar en display
+	output wire [6:0] Activacion
     );
+//Declaracion de la letra a mostrar en 7segmentos
 localparam [6:0]
 	A = 7'b1000001,
 	V = 7'b0001000;
-	 
-assign	Anodo = (Ventilacion) ? V : 
-			(Alarma) ? A : 7'h0;
+
+//Se muestra el ventilacion, sino la alarma, sino nada.
+assign	Activacion = (Ventilacion	? V :
+			(Alarma)	? A : 7'hff;
 
 endmodule
