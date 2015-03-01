@@ -27,7 +27,7 @@ module Clocks(
 reg [20:0]Contador, Cuenta_siguiente; 
 
 //Comportamiento del reloj
-always@(posedge clk, posedge rst) //funciona cuando hay cambio a flanco positivo 
+always@(posedge clk, posedge rst) //funciona cuando hay cambio a franco positivo 
 begin
 	if(rst)
 		Contador <= 21'h0;
