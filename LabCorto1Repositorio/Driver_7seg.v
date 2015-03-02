@@ -52,8 +52,8 @@ end
 //Comportamiento de la maquina de estado
 always@*
 begin
-	Catodo = 7'b1111111; 	//Se muestra en un reset
-	Seleccion = 4'h0;	//Se muestra en un reset
+	Catodo = 7'hff; 	//Se muestra en un reset
+	Seleccion = 4'hf;	//Se muestra en un reset
 	case(estado_actual)
 		idle:
 		//Estado ante el Reset
@@ -65,28 +65,28 @@ begin
 		begin
 			estado_siguiente = decenas;
 			Catodo = Unidades;
-			Seleccion = 4'b0001;
+			Seleccion = 4'b1110;
 		end
 		decenas:
 		//Se enciende el display de Decenas
 		begin
 			estado_siguiente = actividad;
 			Catodo = Decenas;
-			Seleccion = Seleccion << 1;
+			Seleccion = 4'b1101;
 		end
 		actividad:
 		//Se enciende el display de actividad, muestra una "V" o "A"
 		begin
 			estado_siguiente = estado;
 			Catodo = Actividad;
-			Seleccion = Seleccion << 1;
+			Seleccion = 4'b1011;
 		end
 		estado:
 		//Se enciende el display del # de estado
 		begin
 			estado_siguiente = unidades; //Vuelve a Unidades
 			Catodo = Estado;
-			Seleccion = Seleccion << 1;
+			Seleccion = 4'b0111;
 		end
 		default:
 			estado_siguiente = idle;

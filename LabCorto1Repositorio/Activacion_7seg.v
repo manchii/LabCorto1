@@ -29,11 +29,10 @@ module Activacion_7seg(
     );
 //Declaracion de la letra a mostrar en 7segmentos
 localparam [6:0]
-	A = 7'b1000001,
-	V = 7'b0001000;
+	A = 7'b0001000,
+	V = 7'b1000001;	
 
 //Se muestra el ventilacion, sino la alarma, sino nada.
-assign	Activacion = Ventilacion	? V :
-			(Alarma)	? A : 7'hff;
+assign Activacion = Ventilacion ? V : Alarma ? A : 7'hff;
 
 endmodule

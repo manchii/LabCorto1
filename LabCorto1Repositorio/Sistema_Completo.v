@@ -25,7 +25,7 @@ module Sistema_Completo(
 	input wire clk,rst,
 	output wire Ventilacion,
 	output wire Alarma,
-	output wire [7:0] Catodo,
+	output wire [6:0] Catodo,
 	output wire [3:0] Seleccion
     );
 
@@ -51,7 +51,7 @@ wire Peligro;
 
 //Variables del display
 wire [6:0] Unidades, Decenas, Actividad; 
-reg Estado;
+reg [6:0] Estado;
 wire [3:0] Unidades_BCD, Decenas_BCD;
 wire [1:0] Estado_maquina;
 wire clk_disp;
@@ -106,7 +106,7 @@ Reg_AntiRebote ModuloRegistroTemp4(
 	.clk(clk),//1bit
 	.rst(rst),//1bit
 	.Switch(Temperatura[4]),//1bit
-	.Dato_Sincronizado(Temperatura_Sincronizada[5]),//1bit
+	.Dato_Sincronizado(Temperatura_Sincronizada[4]),//1bit
 	.Dato_listo(Dato_listo_Temp4)//1bit
 );
 
@@ -132,7 +132,7 @@ LogicaDeActivacion ModulodeActivacion(
 	.clk(clk),//1bit
 	.Presencia(Presencia_Sincronizada),//1bit
 	.Ignicion(Ignicion_Sincronizada),//1bit
-	.Activar_Decidir(Activar_Decidir)//1bit,
+	.Activar_Decidir(Activar_Decidir),//1bit,
 	.Alarma(Alarma),//1bit
 	.Ventilacion(Ventilacion),//1bit
 	.Peligro(Peligro)//1bit
@@ -154,14 +154,14 @@ Driver_7seg ModuloControlador7seg(
 	.Seleccion(Seleccion) //4bits
 );
 
-Deco7seg ModuloDeco7seg_Unidades(
+Deco7Seg ModuloDeco7seg_Unidades(
 	.hex(Unidades_BCD), //4bits
-	.sseg(Unidades), //7bits
+	.sseg(Unidades) //7bits
 );
 
-Deco7seg ModuloDeco7seg_Decenas(
+Deco7Seg ModuloDeco7seg_Decenas(
 	.hex(Decenas_BCD), //4bits
-	.sseg(Decenas), //7bits
+	.sseg(Decenas) //7bits
 );
 
 ConversorBCD ModuloConversorBCD (
@@ -176,7 +176,7 @@ Control ModuloControl (
 	.rst(rst),//1bit
 	.clk(clk),
 	.Activar_Decidir(Activar_Decidir),//1bit
-	Estados(Estado_maquina) //2bits
+	.Estados(Estado_maquina) //2bits
 );
 
 Clocks ModuloClock_display (

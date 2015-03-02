@@ -13,12 +13,14 @@
 /*
 	Este módulo consiste en una lógica combinacional del cual se describe a partir de
 	la siguente tabla de verdad:
-	Ignicion		Presencia		AlertaFuerte		AlertaDebil	|| Alarma		Ventilacion
-	0			0			X			X		|| 0			0
-	0			1			0			0		|| 0			0
-	0			1			0			1		|| 1			0
-	0			1			1			X		|| 1			1
-	1			X			X			X		|| 0			0
+	Ignicion		Presencia		AlertaFuerte		AlertaDebil		|| Alarma		Ventilacion
+	0				0			X		X			||		0					0
+		0				1						0						0			||		0					0
+		0				1						0						1			||		1					0
+		0				1						1						X			||		1					1
+		1				X						X						X			||		0					0
+	
+	Los resultados serán guardados en un registro.
 */
 // Dependencies: 
 //

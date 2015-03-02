@@ -24,25 +24,22 @@ module Clocks(
 	input wire clk,rst,       //entradas para el reloj
 	output wire clk_display   //salida del reloj
     );
-reg [20:0]Contador, Cuenta_siguiente; 
+localparam N=17;
+
+reg [N:0]Contador, Cuenta_siguiente; 
 
 //Comportamiento del reloj
 always@(posedge clk, posedge rst) //funciona cuando hay cambio a franco positivo 
 begin
 	if(rst)
-		Contador <= 21'h0;
+		Contador <= 0;
 	else
 		Contador <=Cuenta_siguiente; 
 end
 
 always@*
-begin
-	case(Contador)
-				21'hffffff: Cuenta_siguiente =21'b0;
-				default: Cuenta_siguiente = Contador + 1'b1;
-	endcase
-end
+	Cuenta_siguiente = Contador + 1'b1;
 
-assign clk_display = Contador[20];
+assign clk_display = Contador[N];
 
 endmodule
