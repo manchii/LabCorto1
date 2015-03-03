@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps
+﻿`timescale 1ns / 1ps
 //////////////////////////////////////////////////////////////////////////////////
 // Company: Tecnológico de Costa Rica
 // Engineer: Kaled Alfaro e Irene Rivera
@@ -9,7 +9,7 @@
 // Project Name: 
 // Target Devices: 
 // Tool versions: 
-// Description: 
+// Description: este
 //
 // Dependencies: 
 //
