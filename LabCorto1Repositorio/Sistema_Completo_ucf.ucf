@@ -1,0 +1,37 @@
+NET "clk"            LOC = "V10" | IOSTANDARD = "LVCMOS33";
+NET "clk"		PERIOD = 20ns;
+
+#Boton reset
+NET "rst"         LOC = "B8"  | IOSTANDARD = "LVCMOS33";
+
+#Entradas Switches
+
+NET "Ignicion"          LOC = "T9"  | IOSTANDARD = "LVCMOS33";   #Sch name = SW1
+NET "Presencia"          LOC = "V9"  | IOSTANDARD = "LVCMOS33";   #Sch name = SW2
+NET "Temperatura[0]"          LOC = "M8"  | IOSTANDARD = "LVCMOS33";   #Sch name = SW3
+NET "Temperatura[1]"          LOC = "N8"  | IOSTANDARD = "LVCMOS33";   #Sch name = SW4
+NET "Temperatura[2]"          LOC = "U8"  | IOSTANDARD = "LVCMOS33";   #Sch name = SW5
+NET "Temperatura[3]"          LOC = "V8"  | IOSTANDARD = "LVCMOS33";   #Sch name = SW6
+NET "Temperatura[4]"          LOC = "T5"  | IOSTANDARD = "LVCMOS33";   #Sch name = SW7
+
+#Salidas LEDs
+
+NET "Alarma"         LOC = "R11" | IOSTANDARD = "LVCMOS33"; 
+NET "Ventilacion"         LOC = "T11" | IOSTANDARD = "LVCMOS33";
+
+#Display Catodo
+NET "Catodo[6]"         LOC = "T17" | IOSTANDARD = "LVCMOS33";   #Sch name = CA
+NET "Catodo[5]"         LOC = "T18" | IOSTANDARD = "LVCMOS33";   #Sch name = CB
+NET "Catodo[4]"         LOC = "U17" | IOSTANDARD = "LVCMOS33";   #Sch name = CC
+NET "Catodo[3]"         LOC = "U18" | IOSTANDARD = "LVCMOS33";   #Sch name = CD
+NET "Catodo[2]"         LOC = "M14" | IOSTANDARD = "LVCMOS33";   #Sch name = CE
+NET "Catodo[1]"         LOC = "N14" | IOSTANDARD = "LVCMOS33";   #Sch name = CF
+NET "Catodo[0]"         LOC = "L14" | IOSTANDARD = "LVCMOS33";   #Sch name = CG
+
+
+#Display Anodo
+NET "Seleccion[0]"          LOC = "N16" | IOSTANDARD = "LVCMOS33";
+NET "Seleccion[1]"          LOC = "N15" | IOSTANDARD = "LVCMOS33";
+NET "Seleccion[2]"          LOC = "P18" | IOSTANDARD = "LVCMOS33";
+NET "Seleccion[3]"          LOC = "P17" | IOSTANDARD = "LVCMOS33";
+
